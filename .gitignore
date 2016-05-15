@@ -36,4 +36,4 @@ node_modules
 .*.swp
 
 # config file for rtc server
-server_vri/config.js
+config.js
