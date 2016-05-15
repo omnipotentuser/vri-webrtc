@@ -1,11 +1,15 @@
 
 var request = require('request');
-var turnSecret = require('../config.js').thirdparty.turn_secret;
+var turnSecret = require('./config.js').ice.turn_secret;
 
 var io;
+
+// TODO: store in Redis
 var currentRoom = {};
-var passwords = {};
 var rooms = {}; // { room : { islocked : <bool> } }
+
+// TODO: bcrypt, hash, store in Redis
+var passwords = {};
 
 function joinRoom(socket, room){
   socket.join(room);

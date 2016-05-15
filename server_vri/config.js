@@ -1,5 +1,7 @@
+// xirsys.com turn token
+//
 module.exports = {
-  thirdparty: {
+  ice: {
     turn_secret: "your-turn-secret-token"
   }
 };
