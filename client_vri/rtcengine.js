@@ -27,30 +27,102 @@ function RTCEngine(){
     var media_constraints = {
       video : {
         mandatory: {
+          "minFrameRate": "20",
+          "maxFrameRate": "60"
         }
       },
       audio : true
     };
 
     // getUserMedia
+    //
+    // more info on controlling the video events:
+    // https://www.w3.org/TR/html5/embedded-content-0.html#mediaevents
     getUserMedia(
       media_constraints,
       function(stream){
         localStream = stream;
-        var video = $('#local-video');
-        video.attr('src', window.URL.createObjectURL(localStream));
-        localStream.onloadedmetadata = function(e){
-          console.log('onloadedmetadata called, properties:');
+        var local_video = document.getElementById('_openvri_local-video');
+        local_video.onloadedmetadata = function(e){
+          console.log('onloadedmetadata');
+          /*
           for(var prop in e){
-            console.log(prop + ' in ' + e[prop]);
+            console.log('onloadedmetadata ' + prop + ' in ' + e[prop]);
           }
+          */
         }
+        local_video.onpause = function(e){
+          /*
+          for(var prop in e){
+            console.log('onpause ' + prop + ' in ' + e[prop]);
+          }
+          */
+          //console.log('onpause');
+        };
+        local_video.onemptied = function(e){
+          //console.log('onemptied');
+        };
+        local_video.onloadeddata = function(e){
+          //console.log('onloadeddata');
+        };
+        local_video.oncanplay = function(e){
+          //console.log('oncanplay');
+        };
+        local_video.onwaiting = function(e){
+          //console.log('onwaiting');
+        };
+        local_video.oncanplaythrough = function(e){
+          //console.log('oncanplaythrough');
+        };
+        local_video.onended = function(e){
+          //console.log('onended');
+        };
+        local_video.onwaiting = function(e){
+          //console.log('onwaiting');
+        };
+        local_video.onratechange = function(e){
+          //console.log('onratechange');
+        };
+        local_video.onplay = function(e){
+          /*
+          for(var prop in e){
+            console.log('onplay ' + prop + ' in ' + e[prop]);
+          }
+          */
+          //console.log('onplay');
+        };
+        local_video.ontimeupdate = function(e){
+          /*
+          for(var prop in e){
+            console.log('ontimeupdate ' + prop + ' in ' + e[prop]);
+          }
+          */
+          console.log('ontimeupdate');
+        };
+        local_video.ondurationchange = function(e){
+          //console.log('ondurationchange');
+        };
+
+        local_video.src = window.URL.createObjectURL(localStream);
+
+        setTimeout(function(){
+          local_video.play();
+        }, 500);
+
+        setTimeout(function(){
+          local_video.play();
+        }, 500);
+
+
+        //jQuery('#local-video').attr('src', window.URL.createObjectURL(localStream));
+
         console.log('joining', roomName);
         var info = {
           room: roomName,
           isLocked: isLocked,
           password: password
         };
+
         socket.emit('join', info);
       },
       logError
@@ -202,6 +274,7 @@ function RTCEngine(){
 	    peer.buildClient(localStream, handleByteChar, 'offer');
 	    peers.push(peer);
       callback('create', {id:message.id});
+      console.log('createOffer');
 	    peer.peerCreateOffer();
     });
   }
@@ -230,6 +303,7 @@ function RTCEngine(){
             console.log('SDP received: PC not ready. Building.');
             peers[i].buildClient(localStream, handleByteChar, 'answer');
           }
+          console.log('handleSetRemoteDescription, SDP: %O', message.sdp.sdp);
           peers[i].setRemoteDescription(message.sdp);
         }
 	    }
@@ -324,6 +398,7 @@ function RTCEngine(){
     } else {
       console.log('creating new socket connection');
       socket = io({ forceNew: true }); 
+      //socket = io("https://embed.openvri.com", { forceNew: true }); 
     }
     socket.on('connect', function(){
       console.log('socket connected');

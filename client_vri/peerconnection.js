@@ -124,8 +124,12 @@ function Peer(p_socket, p_id, p_roomName, iceConfig) {
   };
 
   var onAddStream = function(evt) {
-    console.log('onAddStream '+evt.stream.id);
-    $('#'+peerid).attr('src', window.URL.createObjectURL(evt.stream));
+    console.log('onAddStream stream id'+evt.stream.id);
+    var pid = peerid.slice(2,-1);
+    var vidObjUrl = window.URL.createObjectURL(evt.stream);
+    console.log('onAddStream pid', pid);
+    console.log('onAddStream vidObjUrl', vidObjUrl);
+    jQuery('#'+pid).attr('src', vidObjUrl);
   };
 
   var onIceCandidate = function(evt){

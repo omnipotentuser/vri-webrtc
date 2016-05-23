@@ -2,7 +2,7 @@
 var request = require('request');
 var turnSecret = require('./config.js').ice.turn_secret;
 
-var io;
+var io = null;
 
 // TODO: store in Redis
 var currentRoom = {};
@@ -16,7 +16,9 @@ function joinRoom(socket, room){
   currentRoom[socket.id] = room;
   var clients = io.sockets.adapter.rooms[room];
   var usersInRoom = [];
-  for (var clientId in clients){
+  console.log('joinRoom room %s, has clients %d', room, clients.length);
+  for (var clientId in clients.sockets){
+    console.log('clientId %s in room %s', clientId, room);
     usersInRoom.push(io.sockets.connected[clientId]);
   }
   if (usersInRoom.length > 1){
